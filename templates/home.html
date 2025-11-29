@@ -1,103 +1,172 @@
 <!doctype html>
 <html lang="en">
 
-<style type='text/css'>
-    * {
-        padding: 0;
-        margin: 0;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-
-    body {
-    
-        background-image: url('/static/background.jpg');
-        background-size: cover;
-        font-family: sans-serif;
-        margin-top: 40px;
-        height: 100vh;
-        padding: 0;
-        margin: 0;
-    }
-   
-    
-    
-
-    
-
-    table {
-        border: 1px;
-        font-family: arial, sans-serif;
-        border-collapse: collapse;
-        width: 86%;
-        margin: auto;
-    }
-
-    td,
-    th {
-        border: 1px solid black !important;
-        padding: 5px;
-    }
-
-    tr:nth-child(even) {
-        background-color: #dddddd;
-    }
-</style>
-
-
 <head>
-    <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+    <title>Face Recognition Attendance System</title>
 
-    <title>Face Recognition Based Attendance System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #c9e9ff, #eaf7ff);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #0b4c61;
+            font-size: 46px;
+            font-weight: 800;
+            text-shadow: 1px 1px 4px rgba(0,0,0,0.15);
+            animation: slideDown 0.8s ease;
+        }
+
+        @keyframes slideDown {
+            from {opacity:0; transform: translateY(-20px);}
+            to {opacity:1; transform: translateY(0);}
+        }
+
+        h2 {
+            background-color: #0b4c61;
+            color: white;
+            padding: 12px;
+            border-radius: 18px 18px 0 0;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .container-box {
+            background: rgba(255,255,255,0.80);
+            border-radius: 18px;
+            padding-bottom: 15px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0px 6px 18px rgba(0, 92, 128, 0.25);
+            transition: 0.3s ease;
+        }
+
+        .container-box:hover {
+            transform: translateY(-6px);
+            box-shadow: 0px 10px 25px rgba(0, 92, 128, 0.35);
+        }
+
+        /* Buttons */
+        .action-btn {
+            padding: 14px 20px;
+            width: 84%;
+            font-size: 20px;
+            font-weight: 700;
+            border-radius: 12px;
+            background:#0b4c61;
+            color:white;
+            border:none;
+            transition:0.28s ease;
+        }
+
+        .action-btn:hover {transform: scale(1.05); opacity:0.95;}
+
+        /* Small Round Buttons */
+        .small-btn {
+            padding:4px 10px;
+            font-size:11px;
+            border-radius:20px;
+            border:none;
+            display:flex;
+            align-items:center;
+            gap:4px;
+            cursor:pointer;
+            margin: 6px 3px;
+        }
+
+        /* Download button */
+        .download-btn {background:#0b4c61;color:white;}
+
+        /* Reset button */
+        .reset-btn {background:#d9534f;color:white;}
+
+        input {
+            margin: 8px 0;
+            padding: 8px;
+            width: 75%;
+            border-radius:10px;
+            border:1px solid #0b4c61;
+            font-size:18px;
+            text-align:center;
+        }
+
+        table {
+            width: 90%;
+            margin: 15px auto;
+            border-collapse: collapse;
+            font-size: 18px;
+        }
+
+        th,td {
+            padding: 10px;
+            border: 1px solid #0b4c61;
+        }
+
+        tr:nth-child(even) {background: #e3f5ff;}
+        tr:hover {background: #bfe8ff; transform: scale(1.01);}
+    </style>
 </head>
-  
+
 <body>
 
-    <div class='mt-3 text-center'>
-        <h1 style="width: auto;margin: auto;color: #0b4c61;padding: 11px;font-size: 44px;">Face Recognition Based
-            Attendance System</h1>
-            <img src="{{url_for('static', filename='logo.png')}}" alt="logo" width="150px" height="150px"  />
-
+    <div class="text-center mt-3">
+        <h1>Face Recognition Attendance System</h1>
+        <img src="{{ url_for('static', filename='logo.png') }}" width="130px" style="margin-top:10px;" />
+        <h3 style="margin-top: 10px; font-size: 22px; color:#0b4c61;">{{ datetoday2 }} |
+            <span id="clock"></span>
+        </h3>
     </div>
 
-    
-
-    <div class='mt-3 text-center'>
-        <h3 style="font-size: 22px;color:#0b4c61;">{{ datetoday2 }} | <span id="clock"></span></h3>
-    </div>
-
-    {% if mess%}
-    <p class="text-center" style="color: red;font-size: 20px;">{{ mess }}</p>
+    {% if mess %}
+    <p class="text-center" style="color: red; font-size: 20px;">{{ mess }}</p>
     {% endif %}
 
-    <div class="row text-center" style="padding: 20px;margin: 20px;">
+    <div class="row text-center" style="margin-top: 30px;">
 
-        <div class="col"
-            style="border-radius: 20px;padding: 0px;background-color:rgba(211, 211, 211, 0.911);margin:0px 10px 10px 10px;min-height: 400px;">
-            <h2 style="border-radius: 20px 20px 0px 0px;background-color: #0b4c61;color: white;padding: 10px;">Today's
-                Attendance <i class="material-icons">assignment</i></h2>
-            <a style="text-decoration: none;max-width: 300px;" href="/start">
-                <button
-                    style="font-size: 24px;font-weight: bold;border-radius: 10px;width:490px;padding: 10px;margin-top: 30px;margin-bottom: 30px;"
-                    type='submit' class='btn btn-primary'>Take Attendance <i
-                        class="material-icons">beenhere</i></button>
+        <!-- Today's Attendance -->
+        <div class="col container-box m-2">
+            <h2>Today's Attendance <i class="material-icons">assignment</i></h2>
+
+            <a href="/start">
+                <button class="action-btn mt-4 mb-3">Take Attendance
+                    <i class="material-icons">beenhere</i>
+                </button>
             </a>
-            <table style="background-color: white;">
-                <tr>
-                    <td><b>S No</b></td>
-                    <td><b>Name</b></td>
-                    <td><b>ID</b></td>
-                    <td><b>Time</b></td>
-                </tr>
-                {% if l %}
 
+            <div style="display:flex;justify-content:center;margin-bottom:10px;">
+                <a href="/download_attendance">
+                    <button class="small-btn download-btn">
+                        <i class="material-icons" style="font-size:12px;">download</i> Attendance
+                    </button>
+                </a>
+
+                <a href="/reset_attendance"
+                   onclick="return confirm('Are you sure you want to reset today\'s attendance? This action cannot be undone!');">
+                    <button class="small-btn reset-btn">
+                        <i class="material-icons" style="font-size:12px;">delete</i> Reset
+                    </button>
+                </a>
+            </div>
+
+            <table>
+                <tr>
+                    <th>S No</th><th>Name</th><th>ID</th><th>Time</th>
+                </tr>
+
+                {% if l %}
                 {% for i in range(l) %}
                 <tr>
                     <td>{{ i+1 }}</td>
@@ -108,44 +177,34 @@
                 {% endfor %}
                 {% endif %}
             </table>
-
         </div>
 
-        <div class="col"
-            style="border-radius: 20px;padding: 0px;background-color:rgba(211, 211, 211, 0.911);margin:0px 10px 10px 10px;height: 400px;">
-            <form action='/add' method="POST" enctype="multipart/form-data">
-                <h2 style="border-radius: 20px 20px 0px 0px;background-color: #0b4c61;color: white;padding: 10px;">Add
-                    New User <i class="material-icons">control_point_duplicate</i></h2>
-                <label style="font-size: 20px;"><b>Enter New User Name*</b></label>
-                <br>
-                <input type="text" id="newusername" name='newusername'
-                    style="font-size: 20px;margin-top:10px;margin-bottom:10px;" required>
-                <br>
-                <label style="font-size: 20px;"><b>Enter New User Id*</b></label>
-                <br>
-                <input type="number" id="newusereid" name='newuserid'
-                    style="font-size: 20px;margin-top:10px;margin-bottom:10px;" required>
-                <br>
-                <button style="width: 232px;margin-top: 20px;font-size: 20px;" type='submit' class='btn btn-dark'>Add
-                    New User
-                </button>
-                <br>
-                <h5 style="padding: 25px;"><i>Total Users in Database: {{totalreg}}</i></h5>
+        <!-- Add New User -->
+        <div class="col container-box m-2">
+            <form action="/register_cam" method="POST">
+                <h2>Add New User <i class="material-icons">control_point_duplicate</i></h2>
+
+                <label><b>User Name*</b></label><br>
+                <input type="text" name="newusername" required><br>
+
+                <label><b>User ID*</b></label><br>
+                <input type="number" name="newuserid" required><br>
+
+                <button class="action-btn mt-4">Open Camera & Register User</button>
+
+                <h5 style="padding: 15px; color:#0b4c61;">Total Users: <b>{{ totalreg }}</b></h5>
             </form>
         </div>
 
     </div>
 
-    <script type="text/javascript">
+    <script>
         var clockElement = document.getElementById('clock');
-
         function clock() {
             clockElement.textContent = new Date().toString().slice(15, 24);
         }
-
         setInterval(clock, 1000);
     </script>
 
 </body>
-
 </html>

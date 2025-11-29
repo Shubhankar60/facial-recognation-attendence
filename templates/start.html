@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Take Attendance</title>
+    <style>
+        body { background:#e7f5ff; text-align:center; font-family:'Segoe UI'; }
+        img { margin-top:20px; border-radius:15px; width:70%; box-shadow:0px 4px 10px rgba(0,0,0,0.2); }
+        h1 { color:#0b4c61; font-size:40px; }
+        button {
+            padding:12px 20px; border:none; border-radius:12px;
+            background:#0b4c61; color:white; font-size:22px; margin-top:20px;
+            cursor:pointer; transition:0.3s ease;
+        }
+        button:hover {opacity:0.85; transform:scale(1.05);}
+        #popup {
+            display:none; padding:20px; background:white; border-radius:10px;
+            position:fixed; top:40%; left:50%; transform:translate(-50%, -50%);
+            font-size:22px; color:green; box-shadow:0 0 12px rgba(0,0,0,0.3);
+        }
+    </style>
+
+    <script>
+        function successAttendance() {
+            document.getElementById("popup").style.display = "block";
+            setTimeout(() => { window.location.href="/"; }, 2000);
+        }
+    </script>
+
+</head>
+<body>
+
+    <h1>Live Attendance Camera</h1>
+    <h3>{{ datetoday2 }}</h3>
+
+    <img src="{{ url_for('video_feed_attendance') }}">
+
+    <br><br>
+    <button onclick="successAttendance()">Stop & Save Attendance</button>
+
+    <div id="popup">✔ Attendance Saved Successfully!</div>
+
+</body>
+</html>

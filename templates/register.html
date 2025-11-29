@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register New User</title>
+    <style>
+        body { background:#e7f5ff; text-align:center; font-family:'Segoe UI'; }
+
+        .video-container {
+            position: relative;
+            display: inline-block;
+            margin-top: 20px;
+        }
+
+        /* live camera */
+        #camera {
+            width: 65%;
+            border-radius: 15px;
+            box-shadow:0 4px 12px rgba(0,0,0,0.3);
+            transition: box-shadow 0.15s ease, border 0.15s ease;
+        }
+
+        /* flash red border animation */
+        .capture-flash {
+            border: 6px solid red !important;
+            box-shadow:0 0 30px red !important;
+        }
+
+        /* big progress number overlay */
+        #counter {
+            position:absolute;
+            top:50%;
+            left:50%;
+            transform:translate(-50%,-50%);
+            font-size:75px;
+            font-weight:700;
+            color:#ffffff;
+            text-shadow:0px 0px 15px #000;
+            display:none;
+        }
+
+        /* success popup */
+        #popup {
+            display:none;
+            position:fixed;
+            top:40%; left:50%;
+            transform:translate(-50%,-50%);
+            background:white;
+            padding:30px 40px;
+            border-radius:15px;
+            box-shadow:0 0 15px rgba(0,0,0,0.4);
+            font-size:24px;
+            color:green;
+        }
+
+        button {
+            padding:12px 22px;
+            border-radius:12px;
+            background:#0b4c61;
+            color:white;
+            border:none;
+            margin-top:25px;
+            font-size:22px;
+            cursor:pointer;
+        }
+    </style>
+
+    <script>
+        let current = 0;
+
+        function onFrameCaptured() {
+            current++;
+
+            // Show big counter text
+            let counter = document.getElementById("counter");
+            counter.style.display = "block";
+            counter.innerText = current;
+
+            // Flash animation
+            let video = document.getElementById("camera");
+            video.classList.add("capture-flash");
+
+            // Remove flash after effect
+            setTimeout(() => {
+                video.classList.remove("capture-flash");
+                counter.style.display = "none";
+            }, 250);
+
+            if(current >= 50){
+                document.getElementById("popup").style.display="block";
+                setTimeout(()=>{ window.location.href="/"; }, 2500);
+            }
+        }
+    </script>
+</head>
+
+<body>
+
+    <h1>Registering {{ username }} (ID: {{ userid }})</h1>
+    <h3>Please keep your face centered — capturing 50 images...</h3>
+
+    <div class="video-container">
+        <img id="camera" src="{{ url_for('video_feed_register') }}" onload="onFrameCaptured()">
+        <div id="counter">0</div>
+    </div>
+
+    <br>
+    <a href="/stop_register"><button>Stop & Exit</button></a>
+
+    <div id="popup">🎉 Capture Complete! Training Model... Redirecting Home...</div>
+
+</body>
+</html>
